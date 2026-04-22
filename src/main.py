@@ -1,8 +1,9 @@
 import flet as ft 
-from controllers.usercontroller import AuthController
-from controllers.tareacontroller import TareaController
+from controllers.UserController import AuthController
+from controllers.TareaController import TareaController
 from views.LoginView import LoginView
 from views.DashboardView import DashboardView
+from views.RegistroView import RegistroView # Asegúrate de tener este import
 
 def start(page: ft.Page):
     # Configuración inicial de la página
