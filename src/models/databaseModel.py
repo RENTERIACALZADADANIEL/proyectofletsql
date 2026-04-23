@@ -1,4 +1,4 @@
-import mysql.connector
+import mysql.connector 
 import os
 from dotenv import load_dotenv
 
@@ -12,4 +12,4 @@ class Database:
             user=os.getenv("root"),
             password=os.getenv(""),
             database=os.getenv("tareas")
-        )
+    )
