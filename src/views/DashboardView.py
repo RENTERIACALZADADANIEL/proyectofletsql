@@ -1,10 +1,13 @@
 import flet as ft
 
 def DashboardView(page, tarea_controller):
+    # Recuperamos tus datos con tu método manual
     user = getattr(page, "user_data", None)
+    
+    # --- 1. SECCIÓN DE INICIO (Tus Tareas originales) ---
     lista_tareas = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
 
-    def refresh():
+    def refresh_tareas():
         if user and 'id_usuario' in user:
             lista_tareas.controls.clear()
             tareas = tarea_controller.obtener_lista(user['id_usuario'])
@@ -15,7 +18,7 @@ def DashboardView(page, tarea_controller):
                             content=ft.ListTile(
                                 title=ft.Text(t['titulo'], weight="bold"),
                                 subtitle=ft.Text(f"{t['descripcion']}\nPrioridad: {t['prioridad']}"),
-                                trailing=ft.Badge(content=ft.Text(t['estado']), bgcolor=ft.Colors.ORANGE_300)
+                                trailing=ft.Badge(label=ft.Text(t['estado']), bgcolor=ft.Colors.ORANGE_300)
                             ), padding=10
                         )
                     )
@@ -35,27 +38,107 @@ def DashboardView(page, tarea_controller):
             )
             if success:
                 txt_titulo.value = ""
-                refresh()
+                refresh_tareas()
+
+    # Contenedor principal de la pestaña Inicio
+    vista_inicio = ft.Column([
+        ft.Row([
+            txt_titulo,
+            ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=add_task),
+        ]),
+        ft.Divider(),
+        ft.Text("Mis Tareas Pendientes", size=20, weight="bold"),
+        lista_tareas
+    ], expand=True, visible=True) # Esta inicia visible
+
+    # --- 2. SECCIÓN EXPLORAR (Segunda opción no pensada) ---
+    vista_explorar = ft.Column([
+        ft.Container(
+            content=ft.Column([
+                ft.Icon(ft.Icons.EXPLORE, size=50, color=ft.Colors.GREY_400),
+                ft.Text("Próximamente...", size=20, color=ft.Colors.GREY_400),
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            alignment=ft.Alignment.CENTER,
+            expand=True
+        )
+    ], expand=True, visible=False)
+
+    # --- 3. SECCIÓN DE PERFIL (Tu sitio de usuario) ---
+    vista_perfil = ft.Column([
+        ft.Container(
+            content=ft.Column([
+                ft.CircleAvatar(
+                    content=ft.Icon(ft.Icons.PERSON, size=40),
+                    radius=40,
+                    bgcolor=ft.Colors.BLUE_GREY_100
+                ),
+                ft.Text(user['nombre'] if user else "Usuario", size=24, weight="bold"),
+                ft.Text(user['email'] if user else "correo@ejemplo.com", size=16, color=ft.Colors.GREY_700),
+                ft.Divider(height=40),
+                
+                # Opciones de Perfil/Settings
+                ft.ListTile(
+                    leading=ft.Icon(ft.Icons.SETTINGS),
+                    title=ft.Text("Configuración"),
+                    subtitle=ft.Text("Ajustes de la aplicación"),
+                    on_click=lambda _: print("Configuración abierta")
+                ),
+                ft.ListTile(
+                    leading=ft.Icon(ft.Icons.HELP_OUTLINE),
+                    title=ft.Text("Ayuda y Soporte"),
+                ),
+                ft.Divider(),
+                
+                # Cerrar Sesión
+                ft.ListTile(
+                    leading=ft.Icon(ft.Icons.LOGOUT, color=ft.Colors.RED),
+                    title=ft.Text("Cerrar Sesión", color=ft.Colors.RED, weight="bold"),
+                    on_click=lambda _: page.go("/")
+                ),
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            padding=20
+        )
+    ], expand=True, visible=False)
+
+    # --- LÓGICA DE NAVEGACIÓN ---
+    def cambiar_pestana(e):
+        idx = e.control.selected_index
+        # Solo una vista es visible a la vez
+        vista_inicio.visible = (idx == 0)
+        vista_explorar.visible = (idx == 1)
+        vista_perfil.visible = (idx == 2)
+        
+        if idx == 0:
+            refresh_tareas()
+            
+        page.update()
+
+    nav_bar = ft.NavigationBar(
+        selected_index=0,
+        on_change=cambiar_pestana,
+        destinations=[
+            ft.NavigationBarDestination(icon=ft.Icons.HOME_OUTLINED, selected_icon=ft.Icons.HOME, label="Inicio"),
+            ft.NavigationBarDestination(icon=ft.Icons.EXPLORE_OUTLINED, selected_icon=ft.Icons.EXPLORE, label="Explorar"),
+            ft.NavigationBarDestination(icon=ft.Icons.PERSON_OUTLINE, selected_icon=ft.Icons.PERSON, label="Perfil"),
+        ],
+    )
 
     return ft.View(
         route="/dashboard",
+        navigation_bar=nav_bar,
         controls=[
             ft.AppBar(
-                title=ft.Text(f"Bienvenido, {user['nombre'] if user else 'Usuario'}"),
-                actions=[
-                    ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"))
-                ],
+                title=ft.Text("SIGE"),
+                bgcolor=ft.Colors.BLACK,
+                color=ft.Colors.WHITE,
+                automatically_imply_leading=False # Evita que salga la flecha de "atrás"
             ),
             ft.Container(
-                content=ft.Column([
-                    ft.Row([
-                        txt_titulo,
-                        ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=add_task),
-                    ]),
-                    ft.Divider(),
-                    ft.Text("Mis Tareas Pendientes", size=20, weight="bold"),
-                    lista_tareas
-                ], expand=True),
+                content=ft.Stack([
+                    vista_inicio,
+                    vista_explorar,
+                    vista_perfil
+                ]),
                 padding=20,
                 expand=True
             ),

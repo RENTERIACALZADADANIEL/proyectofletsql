@@ -3,6 +3,7 @@ from controllers.UserController import AuthController
 from controllers.TareaController import TareaController
 from views.LoginView import LoginView
 from views.DashboardView import DashboardView   
+from models.databaseModel import Database
 
 def start(page: ft.Page):
     page.title="Sistema SIGE"

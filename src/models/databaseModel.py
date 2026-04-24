@@ -1,15 +1,15 @@
-import mysql.connector 
+import mysql.connector
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
 class Database:
-    @staticmethod
-    def get_connection():
+    def get_connection(self):
+        # Usar 127.0.0.1 directamente aquí es la solución más rápida al error
         return mysql.connector.connect(
-            host=os.getenv("localhost"),
-            user=os.getenv("root"),
-            password=os.getenv(""),
-            database=os.getenv("tareas")
-    )
+            host="127.0.0.1", 
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            database=os.getenv("DB_NAME")
+        )
