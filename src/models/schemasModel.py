@@ -12,3 +12,24 @@ class TareaSchema(BaseModel):
     descripcion: Optional[str] = None
     prioridad: str = "media"
     clasificacion: str = "personal"
+
+    
+
+
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+
+class UsuarioSchema(BaseModel):
+    """Esquema base: Se usa para validar el inicio de sesión"""
+    email: EmailStr
+    password: str = Field(min_length=8)
+
+class RegistroSchema(UsuarioSchema):
+    """Hereda email y password, y añade el nombre para el registro"""
+    nombre: str = Field(min_length=3, max_length=100)
+
+class TareaSchema(BaseModel):
+    titulo: str = Field(min_length=1, max_length=200)
+    descripcion: Optional[str] = None
+    prioridad: str = "media"
+    clasificacion: str = "personal"
