@@ -17,9 +17,17 @@ def DashboardView(page, tarea_controller):
                         content=ft.Container(
                             content=ft.ListTile(
                                 title=ft.Text(t['titulo'], weight="bold"),
-                                subtitle=ft.Text(f"{t['descripcion']}\nPrioridad: {t['prioridad']}"),
-                                trailing=ft.Badge(label=ft.Text(t['estado']), bgcolor=ft.Colors.ORANGE_300)
-                            ), padding=10
+                                subtitle=ft.Text(
+                                    f"{t['descripcion']}\nPrioridad: {t['prioridad']}"
+                                ),
+                                trailing=ft.Container(
+                                    content=ft.Text(t.get('estado', 'pendiente')),
+                                    bgcolor=ft.Colors.ORANGE_300,
+                                    padding=5,
+                                    border_radius=5
+                                )
+                            ),
+                            padding=10
                         )
                     )
                 )
