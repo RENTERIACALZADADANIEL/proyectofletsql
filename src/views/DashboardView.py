@@ -1,10 +1,10 @@
 import flet as ft
 
 def DashboardView(page, tarea_controller):
-    # Recuperamos tus datos con tu método manual
+    
     user = getattr(page, "user_data", None)
     
-    # --- 1. SECCIÓN DE INICIO (Tus Tareas originales) ---
+    
     lista_tareas = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
 
     def refresh_tareas():
@@ -48,7 +48,7 @@ def DashboardView(page, tarea_controller):
                 txt_titulo.value = ""
                 refresh_tareas()
 
-    # Contenedor principal de la pestaña Inicio
+   
     vista_inicio = ft.Column([
         ft.Row([
             txt_titulo,
@@ -57,9 +57,9 @@ def DashboardView(page, tarea_controller):
         ft.Divider(),
         ft.Text("Mis Tareas Pendientes", size=20, weight="bold"),
         lista_tareas
-    ], expand=True, visible=True) # Esta inicia visible
+    ], expand=True, visible=True) 
 
-    # --- 2. SECCIÓN EXPLORAR (Segunda opción no pensada) ---
+   
     vista_explorar = ft.Column([
         ft.Container(
             content=ft.Column([
@@ -71,7 +71,7 @@ def DashboardView(page, tarea_controller):
         )
     ], expand=True, visible=False)
 
-    # --- 3. SECCIÓN DE PERFIL (Tu sitio de usuario) ---
+    
     vista_perfil = ft.Column([
         ft.Container(
             content=ft.Column([
@@ -84,7 +84,7 @@ def DashboardView(page, tarea_controller):
                 ft.Text(user['email'] if user else "correo@ejemplo.com", size=16, color=ft.Colors.GREY_700),
                 ft.Divider(height=40),
                 
-                # Opciones de Perfil/Settings
+                
                 ft.ListTile(
                     leading=ft.Icon(ft.Icons.SETTINGS),
                     title=ft.Text("Configuración"),
@@ -97,7 +97,7 @@ def DashboardView(page, tarea_controller):
                 ),
                 ft.Divider(),
                 
-                # Cerrar Sesión
+               
                 ft.ListTile(
                     leading=ft.Icon(ft.Icons.LOGOUT, color=ft.Colors.RED),
                     title=ft.Text("Cerrar Sesión", color=ft.Colors.RED, weight="bold"),
@@ -108,10 +108,10 @@ def DashboardView(page, tarea_controller):
         )
     ], expand=True, visible=False)
 
-    # --- LÓGICA DE NAVEGACIÓN ---
+    
     def cambiar_pestana(e):
         idx = e.control.selected_index
-        # Solo una vista es visible a la vez
+        
         vista_inicio.visible = (idx == 0)
         vista_explorar.visible = (idx == 1)
         vista_perfil.visible = (idx == 2)
@@ -139,7 +139,7 @@ def DashboardView(page, tarea_controller):
                 title=ft.Text("SIGE"),
                 bgcolor=ft.Colors.BLACK,
                 color=ft.Colors.WHITE,
-                automatically_imply_leading=False # Evita que salga la flecha de "atrás"
+                automatically_imply_leading=False 
             ),
             ft.Container(
                 content=ft.Stack([

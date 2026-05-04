@@ -6,7 +6,7 @@ load_dotenv()
 
 class Database:
     def get_connection(self):
-        # Usar 127.0.0.1 directamente aquí es la solución más rápida al error
+        
         return mysql.connector.connect(
             host="127.0.0.1", 
             user=os.getenv("DB_USER"),
