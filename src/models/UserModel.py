@@ -1,4 +1,5 @@
 import bcrypt
+import datetime
 from .databaseModel import Database
 
 class UsuarioModel:
@@ -31,8 +32,17 @@ class UsuarioModel:
        
         cursor.execute("SELECT * FROM usuario WHERE email=%s", (email,))
         user = cursor.fetchone()
-        conn.close()
         
         if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+           
+            cursor.execute("UPDATE usuario SET ultimo_acceso = NOW() WHERE id_usuario = %s", (user['id_usuario'],))
+            conn.commit()
+            
+           
+            user['ultimo_acceso'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            conn.close()
             return user
+            
+        conn.close()
         return None

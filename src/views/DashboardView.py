@@ -4,7 +4,6 @@ def DashboardView(page, tarea_controller):
     
     user = getattr(page, "user_data", None)
     
-    
     lista_tareas = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
 
     def refresh_tareas():
@@ -48,7 +47,7 @@ def DashboardView(page, tarea_controller):
                 txt_titulo.value = ""
                 refresh_tareas()
 
-   
+    
     vista_inicio = ft.Column([
         ft.Row([
             txt_titulo,
@@ -59,7 +58,7 @@ def DashboardView(page, tarea_controller):
         lista_tareas
     ], expand=True, visible=True) 
 
-   
+    
     vista_explorar = ft.Column([
         ft.Container(
             content=ft.Column([
@@ -82,8 +81,8 @@ def DashboardView(page, tarea_controller):
                 ),
                 ft.Text(user['nombre'] if user else "Usuario", size=24, weight="bold"),
                 ft.Text(user['email'] if user else "correo@ejemplo.com", size=16, color=ft.Colors.GREY_700),
+                ft.Text(f"Último acceso: {user.get('ultimo_acceso', 'Recién registrado')}" if user and user.get('ultimo_acceso') else "Último acceso: N/A", size=14, color=ft.Colors.GREY_500, italic=True),
                 ft.Divider(height=40),
-                
                 
                 ft.ListTile(
                     leading=ft.Icon(ft.Icons.SETTINGS),
@@ -97,7 +96,6 @@ def DashboardView(page, tarea_controller):
                 ),
                 ft.Divider(),
                 
-               
                 ft.ListTile(
                     leading=ft.Icon(ft.Icons.LOGOUT, color=ft.Colors.RED),
                     title=ft.Text("Cerrar Sesión", color=ft.Colors.RED, weight="bold"),
