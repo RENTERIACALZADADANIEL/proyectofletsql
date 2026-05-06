@@ -5,7 +5,7 @@ from views.LoginView import LoginView
 from views.DashboardView import DashboardView   
 from views.RegistroView import RegistroView  
 from models.databaseModel import Database
-
+      
 def start(page: ft.Page):
     page.title = "Sistema SIGE"
     page.window_width = 450
